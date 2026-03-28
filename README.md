@@ -1,0 +1,183 @@
+<p align="center">
+  <h1 align="center">🫀 HeartLens</h1>
+  <p align="center">
+    <b>用 Apple Watch 检查心脏，Qwen3.5 端侧解读，数据永远不出你的设备</b>
+  </p>
+  <p align="center">
+    <a href="#快速开始">快速开始</a> · <a href="#功能特性">功能特性</a> · <a href="#效果展示">效果展示</a> · <a href="docs/README_EN.md">English</a>
+  </p>
+  <p align="center">
+    <img src="https://img.shields.io/badge/python-3.11+-blue.svg" alt="Python">
+    <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
+    <img src="https://img.shields.io/badge/LLM-Qwen3.5--4B-purple.svg" alt="LLM">
+    <img src="https://img.shields.io/badge/device-Apple%20Watch-black.svg" alt="Apple Watch">
+  </p>
+</p>
+
+HeartLens 是一个**完全端侧运行**的 AI 心电图筛查工具。导出你的 Apple Watch ECG，CNN-LSTM 模型在几秒内完成分类，然后你的心电波形会被**染上颜色**：红色代表 AI 高度关注的区域，蓝色代表忽略的区域。你可以直观地看到模型到底在你心电图的哪个位���、哪个波形上做出了判断。最后，本地运行的 Qwen3.5-4B 直接"看"这张带颜色的心电图，为你生成一份通俗易懂的解读报告。全程零联网、零上传、零 API 调用，你的心电数据永远不会离开你自己的设备。
+
+> **为什么选 Qwen3.5-4B？** 我们在 34 个测试场景上对比了 GPT-5.4（商用 API）和 Qwen3.5 全系列（0.8B / 2B / 4B）。在多模态模式下（LLM 直接看 Grad-CAM 热力图），**Qwen3.5-4B 实现了与 GPT-5.4 完全相同的临床解释质量，零幻觉、100% 完整度**，同时推理速度快 3 倍，且整个模型只有 3.4GB，一张消费级显卡甚至纯 CPU 就能跑。
+
+![架构图](assets/architecture.png)
+
+## 它能做什么
+
+1. **读取 Apple Watch ECG** — 直接解析 iPhone 健康 App 导出的 CSV 文件（512Hz 单导联）
+2. **AI 分类** — CNN-LSTM 模型识别 5 类心脏异常（心肌梗死、传导阻滞、ST/T 改变、心室肥大、正常）
+3. **可视化注意力** — Grad-CAM 热力图展示 AI 关注了哪段心电波形，让你看到判断依据
+4. **Qwen3.5 端侧解读** — 本地 Qwen3.5-4B 多模态模型直接"看"热力图生成临床解读，不调任何外部 API
+5. **数据永远不出设备** — 从录制到出报告，所有计算都在你自己的机器上完成
+
+## 效果展示
+
+### 你的心电图会被"染色"
+
+![Grad-CAM 示例](assets/gradcam_example.png)
+
+> 上图是一条真实的心电波形。AI 用颜色告诉你它在看哪里：**红色/橙色 = 高度关注**，**蓝色 = 忽略**。这个例子是传导阻滞（CD），可以看到模型精准地锁定了每个 QRS 波群（心脏电信号最强的部分），这与心脏科医生判断传导异常时关注的区域完全一致。下方的红色面积图是原始注意力强度，峰值越高说明模型越确信这个位置有诊断价值。
+
+### Apple Watch 真实心电分析
+
+![Apple Watch Demo](assets/apple_watch_demo.png)
+
+> 这是一条从 Apple Watch Series 9 上导出的真实心电图。颜色分布均匀、没有集中的红色区域，说明模型没有发现异常聚焦点。最终判断：窦性心律（正常），置信度 91%。这就是健康心脏的样子。
+
+## 快速开始
+
+三步启动，无需 GPU：
+
+```bash
+# 1. 克隆项目
+git clone https://github.com/patr1ckzhu/HeartLens-AppleWatch.git
+cd HeartLens-AppleWatch
+conda env create -f environment.yml && conda activate heartlens
+
+# 2. 拉取端侧 LLM（Qwen3.5-4B，3.4GB，只需下载一次）
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull qwen3.5:4b
+
+# 3. 启动
+python demo/app.py
+```
+
+打开浏览器，上传 Apple Watch ECG 的 CSV 文件，几秒钟后你会看到：分类结果 + 注意力热力图 + Qwen3.5 生成的中文解读报告。
+
+### 如何从 Apple Watch 导出 ECG
+
+1. iPhone 打开「健康」App → 浏览 → 心脏 → 心电图 (ECG)
+2. 选择一条记录 → 「导出 PDF」→ 同时生成 CSV 文件
+3. 通过 AirDrop / iCloud / 数据线将 CSV 传到电脑
+
+## 功能特性
+
+| 特性 | 说明 |
+|------|------|
+| 🏥 **5 类心脏异常检测** | 正常 / 心肌梗死 / ST-T 改变 / 传导阻滞 / 心室肥大 |
+| 📊 **PTB-XL 基准验证** | 12 导联 macro AUC 0.914，单导联（Apple Watch）0.832 |
+| ⌚ **Apple Watch 原生支持** | 直接解析 512Hz CSV，自动重采样和预处理 |
+| 🔍 **Grad-CAM 可解释性** | 看到 AI 到底在关注哪段心电波形 |
+| 🤖 **Qwen3.5 端侧解读** | 4B 多模态模型直接看热力图生成报告，效果匹配 GPT-5.4 |
+| 🔒 **完全端侧离线** | 零云端、零 API、零数据上传 |
+| ⚡ **消费级硬件** | CPU 可跑，有 GPU 更快 |
+
+## 为什么是 Qwen3.5-4B + 多模态？
+
+传统方案是把 AI 分析结果转成文字描述再喂给 LLM，但这样小模型容易产生**幻觉**（编造不存在的异常）。我们发现了一个更好的方案：
+
+**直接把 Grad-CAM 热力图作为图像输入给 Qwen3.5 的视觉能力。**
+
+当 LLM 能"看到"真实的心电波形和注意力分布时，它会被视觉证据锁定，不再胡编。
+
+| 模式 | GPT-5.4 | Qwen3.5-4B | Qwen3.5-2B | Qwen3.5-0.8B |
+|------|---------|------------|------------|---------------|
+| 文本输入（幻觉率） | **0%** | 15% | 24% | 15% |
+| 图像输入（幻觉率） | **0%** | **0%** | **0%** | **0%** |
+| 平均延迟 | 7.4s | **2.7s** | 2.0s | 1.2s |
+| 需要联网？ | 是 | **否** | **否** | **否** |
+| 数据是否离开设备？ | 是 | **否** | **否** | **否** |
+
+**结论：Qwen3.5-4B + 多模态 = 商用 API 的质量 + 端侧的隐私保护。**
+
+### 端侧部署路线图
+
+我们的实验结果支持分层端侧部署：
+
+| 部署层级 | 模型 | 大小 | 场景 |
+|----------|------|------|------|
+| ⌚ 手表/可穿戴 | Qwen3.5-0.8B | 1.0GB | 实时心率监测 + 异常提醒 |
+| 📱 手机 | Qwen3.5-4B | 3.4GB | 完整 ECG 分析 + 可视化报告 |
+| 💻 电脑/诊所 | Qwen3.5-4B / 9B | 3.4-7GB | 多导联分析 + 详细临床解读 |
+
+0.8B 到 4B 在多模态模式下均为零幻觉。模型选择取决于你的硬件和延迟要求。
+
+## 技术架构
+
+```
+Apple Watch ECG (512Hz CSV)
+  → 重采样至 500Hz + 带通滤波 (0.5-40Hz) + z-score 归一化
+  → CNN-LSTM 分类器
+      残差 1D 卷积 (SE 注意力) → 双向 LSTM → 5 类诊断概率
+  → Grad-CAM 注意力热力图
+  → Qwen3.5-4B 多模态推理
+      输入: 热力图图像 + 诊断概率 → 输出: 自然语言临床解读
+```
+
+### 消融实验
+
+| 模型 | Macro AUC | 参数量 |
+|------|-----------|--------|
+| Random Forest (基线) | 0.861 | — |
+| LSTM-only | 0.908 | 0.7M |
+| CNN-only | 0.912 | 1.2M |
+| **CNN-LSTM (本项目)** | **0.914** | **1.5M** |
+| CNN-Transformer | 0.913 | 3.3M |
+
+CNN encoder 贡献了绝大部分分类能力。LSTM 和 Transformer 在固定长度 10 秒录音上差异可忽略，我们选择 CNN-LSTM 因为它参数最少、训练最稳定、与 Grad-CAM 兼容性最好。
+
+## 硬件要求
+
+| 场景 | 最低配置 | 推荐配置 |
+|------|----------|----------|
+| 仅分类（无 LLM） | CPU，2GB RAM | 任意 GPU |
+| 分类 + Qwen3.5-0.8B | CPU，4GB RAM | 任意 GPU |
+| 分类 + Qwen3.5-4B | 8GB RAM | GPU 6GB+ VRAM |
+| 模型训练 | GPU 8GB+ VRAM | GPU 16GB VRAM |
+
+## 项目结构
+
+```
+HeartLens-AppleWatch/
+├── configs/            # 超参数配置
+├── data/               # 数据加载与预处理
+├── demo/               # Gradio 交互式 Demo
+├── evaluation/         # 评估脚本（分类/LLM/多模态）
+├── experiments/        # 训练与消融实验
+├── llm/                # LLM 解释模块（Ollama + 规则基线）
+├── models/             # CNN-LSTM / CNN-only / LSTM-only / Transformer
+└── report/             # 学术论文 (TMLR 格式)
+```
+
+## 免责声明
+
+⚠️ **HeartLens 是一个研究原型，不是医疗器械。** 输出结果不构成医学诊断，不能替代医生的专业判断。如果你对心脏健康有任何疑虑，请咨询医疗专业人士。本项目仅供学术研究和技术探索。
+
+## 引用
+
+如果这个项目对你有帮助：
+
+```bibtex
+@article{heartlens2026,
+  title={HeartLens: Interpretable ECG Screening with CNN-LSTM and LLM Explanation},
+  author={Ding, Ziqi and Ding, Zihan and Li, Ning and Liu, Estelle and Zhu, Patrick},
+  year={2026},
+  institution={University College London}
+}
+```
+
+## Star History
+
+如果你觉得这个项目有意思，请给个 ⭐ 让更多人看到！
+
+## 许可证
+
+[MIT License](LICENSE)
