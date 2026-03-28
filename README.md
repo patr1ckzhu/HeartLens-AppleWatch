@@ -68,9 +68,22 @@ python demo/app.py
 
 ### 如何从 Apple Watch 导出 ECG
 
-1. iPhone 打开「健康」App → 浏览 → 心脏 → 心电图 (ECG)
-2. 选择一条记录 → 「导出 PDF」→ 同时生成 CSV 文件
-3. 通过 AirDrop / iCloud / 数据线将 CSV 传到电脑
+Apple Watch 的 ECG 数据不能单条导出，需要通过「健康」App 统一导出全部健康数据：
+
+1. 打开 Apple Watch 上的 **ECG**（心电图）App，手指放在数码表冠上录制 30 秒
+2. iPhone 打开**健康** App → 点击右上角**头像** → 滑到底部 → **导出所有健康数据**
+3. 等待几分钟，选择「储存到文件」或通过 AirDrop 传到电脑
+4. 解压导出的 ZIP，ECG 文件在 `apple_health_export/electrocardiograms/` 目录下：
+
+```
+apple_health_export/
+  └── electrocardiograms/
+        ├── ecg_2024-01-15.csv
+        ├── ecg_2024-03-20.csv
+        └── ...
+```
+
+上传其中任意一个 CSV 文件到 HeartLens 即可。
 
 ## 功能特性
 

@@ -68,9 +68,22 @@ Open your browser, upload an Apple Watch ECG CSV, and within seconds you'll see:
 
 ### How to Export ECG from Apple Watch
 
-1. Open the **Health** app on your iPhone → Browse → Heart → Electrocardiograms (ECG)
-2. Select a recording → "Export a PDF for Your Doctor" → a CSV file is generated alongside the PDF
-3. Transfer the CSV to your computer via AirDrop / iCloud / USB
+Apple Watch ECG data cannot be exported per-recording; you need to export all health data at once via the Health app:
+
+1. Open the **ECG** app on your Apple Watch, hold your finger on the Digital Crown for 30 seconds to record
+2. On iPhone, open **Health** → tap your **profile picture** (top right) → scroll to bottom → **Export All Health Data**
+3. Wait a few minutes, then choose "Save to Files" or AirDrop to your computer
+4. Unzip the export. ECG files are in `apple_health_export/electrocardiograms/`:
+
+```
+apple_health_export/
+  └── electrocardiograms/
+        ├── ecg_2024-01-15.csv
+        ├── ecg_2024-03-20.csv
+        └── ...
+```
+
+Upload any of these CSV files to HeartLens.
 
 ## Features
 
