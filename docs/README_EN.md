@@ -38,7 +38,7 @@ Everything runs fully offline. Zero cloud calls, zero data uploads, zero API key
 
 ![Grad-CAM Example](../assets/gradcam_example.png)
 
-> This ECG comes from the PTB-XL clinical database (**standard 12-lead** recording, showing Lead I here). **Red/orange = high attention**, **blue = ignored**. This example shows Conduction Disturbance (CD): the model precisely locks onto each QRS complex (the heart's strongest electrical signal), consistent with what a cardiologist would examine for conduction abnormalities. The lower panel shows raw attention magnitude; peaks indicate where the model is most confident of diagnostic value.
+> This ECG comes from the PTB-XL clinical database (**standard 12-lead** recording, showing Lead I here). **Red/orange = high attention**, **blue = ignored**. This example shows Conduction Disturbance (CD, 97% confidence). Notice the model does **not** attend to the tallest R-wave peaks (blue); instead, attention concentrates on the secondary deflections following each R-wave (red/orange). This aligns with clinical reasoning for conduction disturbance: the abnormality lies not in R-wave amplitude but in QRS morphology changes (widening, notching, secondary deflections) that distinguish normal conduction from block. The lower panel shows raw attention magnitude, with periodic peaks corresponding to the abnormal morphology region in each heartbeat cycle.
 
 ### Real Apple Watch ECG Analysis
 
