@@ -38,13 +38,13 @@ Everything runs fully offline. Zero cloud calls, zero data uploads, zero API key
 
 ![Grad-CAM Example](../assets/gradcam_example.png)
 
-> A real ECG waveform with AI attention overlay. **Red/orange = high attention**, **blue = ignored**. This example shows Conduction Disturbance (CD): the model precisely locks onto each QRS complex (the heart's strongest electrical signal), consistent with what a cardiologist would examine for conduction abnormalities. The lower panel shows raw attention magnitude; peaks indicate where the model is most confident of diagnostic value.
+> This ECG comes from the PTB-XL clinical database (**standard 12-lead** recording, showing Lead I here). **Red/orange = high attention**, **blue = ignored**. This example shows Conduction Disturbance (CD): the model precisely locks onto each QRS complex (the heart's strongest electrical signal), consistent with what a cardiologist would examine for conduction abnormalities. The lower panel shows raw attention magnitude; peaks indicate where the model is most confident of diagnostic value.
 
 ### Real Apple Watch ECG Analysis
 
 ![Apple Watch Demo](../assets/apple_watch_demo.png)
 
-> A real ECG exported from a team member's Apple Watch (recorded March 2026). The waveform is clean, predominantly blue with no concentrated red regions, indicating the model found no abnormalities. Final verdict: Sinus Rhythm (Normal), 91% confidence. This is what a healthy heart looks like through HeartLens.
+> Apple Watch captures only a **single lead** (equivalent to Lead I), carrying far less information than a hospital 12-lead ECG. Yet HeartLens's single-lead model (macro AUC 0.832) still extracts sufficient diagnostic signal. Above is a real ECG exported from a team member's Apple Watch (recorded March 2026). The waveform is clean, predominantly blue with no concentrated red regions, indicating the model found no abnormalities. Final verdict: Sinus Rhythm (Normal), 91% confidence. This is what a healthy heart looks like through HeartLens.
 
 ## Quick Start
 
