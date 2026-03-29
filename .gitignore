@@ -14,6 +14,9 @@ checkpoints/
 *.ckpt
 wandb/
 
+# Keep pretrained single-lead checkpoint for demo
+!results/best_model_single_lead.pt
+
 # Python
 __pycache__/
 *.pyc
