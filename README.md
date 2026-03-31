@@ -64,7 +64,7 @@ ollama pull qwen3.5:4b
 python demo/app.py
 ```
 
-打开浏览器，上传 Apple Watch ECG 的 CSV 文件，几秒钟后你会看到：分类结果 + 注意力热力图 + Qwen3.5 生成的中文解读报告。
+启动后 Gradio 会自动打开本地页面（`localhost:7860`），界面底部已预置样例心电文件，**点一下就能看到完整分析结果**（没有 Apple Watch 也能体验）。你也可以上传自己的 CSV。
 
 ### 如何从 Apple Watch 导出 ECG
 
