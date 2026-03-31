@@ -53,4 +53,5 @@ electrocardiograms_*/
 *_ecg/
 *_ECG/
 *.csv
+!examples/*.csv
 !environment.yml
