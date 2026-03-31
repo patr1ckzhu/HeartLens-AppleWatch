@@ -181,6 +181,18 @@ def create_demo(
 
         return tmp.name, explanation
 
+    # Collect sample ECGs for one-click demo
+    example_dir = os.path.join(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "examples"
+    )
+    examples = None
+    if os.path.isdir(example_dir):
+        csvs = sorted(
+            f for f in os.listdir(example_dir) if f.endswith(".csv")
+        )
+        if csvs:
+            examples = [[os.path.join(example_dir, f)] for f in csvs]
+
     demo = gr.Interface(
         fn=analyse_ecg,
         inputs=gr.File(label="Upload ECG (Apple Watch CSV)"),
@@ -188,6 +200,7 @@ def create_demo(
             gr.Image(label="ECG with Grad-CAM Attention"),
             gr.Textbox(label="AI Explanation", lines=12),
         ],
+        examples=examples,
         title="HeartLens — AI ECG Screening Assistant",
         description=(
             "Upload an Apple Watch ECG export (CSV) for automated cardiac "
