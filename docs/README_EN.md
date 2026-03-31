@@ -166,11 +166,13 @@ HeartLens-AppleWatch/
 ├── configs/            # Hyperparameter configs
 ├── data/               # Data loading and preprocessing
 ├── demo/               # Gradio interactive demo
+├── docs/               # English README and documentation
 ├── evaluation/         # Evaluation scripts (classification / LLM / multimodal)
+├── examples/           # Sample Apple Watch ECGs (ready to use)
 ├── experiments/        # Training and ablation experiments
 ├── llm/                # LLM explanation module (Ollama + rule-based baseline)
 ├── models/             # CNN-LSTM / CNN-only / LSTM-only / Transformer
-└── docs/               # Documentation
+└── results/            # Pretrained weights
 ```
 
 ## Disclaimer

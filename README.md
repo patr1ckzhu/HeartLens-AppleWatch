@@ -166,11 +166,13 @@ HeartLens-AppleWatch/
 ├── configs/            # 超参数配置
 ├── data/               # 数据加载与预处理
 ├── demo/               # Gradio 交互式 Demo
+├── docs/               # 英文 README 等文档
 ├── evaluation/         # 评估脚本（分类/LLM/多模态）
+├── examples/           # 样例 Apple Watch ECG（开箱即用）
 ├── experiments/        # 训练与消融实验
 ├── llm/                # LLM 解释模块（Ollama + 规则基线）
 ├── models/             # CNN-LSTM / CNN-only / LSTM-only / Transformer
-└── report/             # 学术论文 (TMLR 格式)
+└── results/            # 预训练权重
 ```
 
 ## 免责声明
